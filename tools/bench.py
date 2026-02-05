@@ -112,7 +112,7 @@ def _print_stats(label: str, part: str, stats: dict, as_json: bool) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark runner for AoC days.")
     parser.add_argument("--part1", required=True, help="Command for part 1")
-    parser.add_argument("--part2", required=True, help="Command for part 2")
+    parser.add_argument("--part2", help="Command for part 2 (optional)")
     parser.add_argument("--runs", type=int, default=10)
     parser.add_argument("--warmup", type=int, default=2)
     parser.add_argument("--no-hyperfine", action="store_true")
@@ -124,10 +124,11 @@ def main() -> None:
     bench = _hyperfine_bench if use_hyperfine else _simple_bench
 
     stats1 = bench(args.part1, args.runs, args.warmup)
-    stats2 = bench(args.part2, args.runs, args.warmup)
-
     _print_stats(args.label, "part1", stats1, args.json)
-    _print_stats(args.label, "part2", stats2, args.json)
+
+    if args.part2:
+        stats2 = bench(args.part2, args.runs, args.warmup)
+        _print_stats(args.label, "part2", stats2, args.json)
 
 
 if __name__ == "__main__":

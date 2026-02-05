@@ -8,6 +8,7 @@ Notes:
 - Puzzle statements and personal inputs are not included. Provide your own
   input via --input <path> or stdin.
 - Each day is solved without hardcoding or special-casing the example.
+- Current scope is part 1 only; part 2 will be added later.
 
 ## Layout
 
@@ -27,7 +28,9 @@ All implementations must support:
 - --part 1|2
 - --input <path> (optional; reads stdin if omitted)
 
-They print only the answer for the requested part.
+They print only the answer for the requested part. If part 2 is requested
+before it is implemented, the program exits with a non-zero status and prints
+an error to stderr.
 
 ## Benchmarking
 
@@ -37,13 +40,14 @@ Use the provided benchmark runner:
 
 If hyperfine is installed, the runner uses it by default. Otherwise it falls
 back to a simple repeated timer. Each day README records the measured results
-and the exact command used.
+and the exact command used. For part 1-only days, the part 2 column is marked
+as not implemented.
 
 ## Days Overview
 
 | Day | Primary (fastest) | Baseline | Status | Link |
 | --- | --- | --- | --- | --- |
-| 01 | TBD | TBD | pending | day01/README.md |
+| 01 | Rust | Python 3 | part1 complete | day01/README.md |
 | 02 | TBD | TBD | pending | day02/README.md |
 | 03 | TBD | TBD | pending | day03/README.md |
 | 04 | TBD | TBD | pending | day04/README.md |
