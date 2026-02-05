@@ -53,7 +53,7 @@ as not implemented.
 | 04 | Rust | Python 3 | part1 complete | day04/README.md |
 | 05 | Rust | Python 3 | part1 complete | day05/README.md |
 | 06 | Rust | Python 3 | part1 complete | day06/README.md |
-| 07 | TBD | TBD | pending | day07/README.md |
+| 07 | Rust | Python 3 | part1 complete | day07/README.md |
 | 08 | TBD | TBD | pending | day08/README.md |
 | 09 | TBD | TBD | pending | day09/README.md |
 | 10 | TBD | TBD | pending | day10/README.md |

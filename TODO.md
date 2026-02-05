@@ -10,7 +10,7 @@
 - [x] Day 04 (primary + baseline + benchmarks, part 1)
 - [x] Day 05 (primary + baseline + benchmarks, part 1)
 - [x] Day 06 (primary + baseline + benchmarks, part 1)
-- [ ] Day 07 (primary + baseline + benchmarks)
+- [x] Day 07 (primary + baseline + benchmarks, part 1)
 - [ ] Day 08 (primary + baseline + benchmarks)
 - [ ] Day 09 (primary + baseline + benchmarks)
 - [ ] Day 10 (primary + baseline + benchmarks)
