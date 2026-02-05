@@ -58,5 +58,5 @@ python3 tools/bench.py \
 
 | Implementation (method) | Language/Runtime | Build flags / mode | Part 1 time (ms) | Part 2 time (ms) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Primary | Rust | rustc -O -C target-cpu=native | 1.385 (best 1.057) | TBD | Byte parsing, modulo ring |
-| Baseline | Python 3 | cpython | 18.894 (best 18.305) | TBD | Simple line parsing |
+| Primary | Rust | rustc -O -C target-cpu=native | 1.115 (best 0.852) | 1.167 (best 0.856) | Byte parsing, modulo ring |
+| Baseline | Python 3 | cpython | 18.317 (best 18.015) | 18.219 (best 17.879) | Simple line parsing |

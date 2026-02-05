@@ -16,3 +16,6 @@
 - [x] Day 10 (primary + baseline + benchmarks, part 1)
 - [x] Day 11 (primary + baseline + benchmarks, part 1)
 - [x] Day 12 (primary + baseline + benchmarks, part 1)
+
+## Part 2
+- [x] Day 01 (primary + baseline + benchmarks, part 2)

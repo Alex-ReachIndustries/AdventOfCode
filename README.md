@@ -8,7 +8,7 @@ Notes:
 - Puzzle statements and personal inputs are not included. Provide your own
   input via --input <path> or stdin.
 - Each day is solved without hardcoding or special-casing the example.
-- Current scope is part 1 only; part 2 will be added later.
+- Part 2 is being added incrementally; day 01 is complete.
 
 ## Layout
 
@@ -47,7 +47,7 @@ as not implemented.
 
 | Day | Primary (fastest) | Baseline | Status | Link |
 | --- | --- | --- | --- | --- |
-| 01 | Rust | Python 3 | part1 complete | day01/README.md |
+| 01 | Rust | Python 3 | part1+2 complete | day01/README.md |
 | 02 | Rust | Python 3 | part1 complete | day02/README.md |
 | 03 | Rust | Python 3 | part1 complete | day03/README.md |
 | 04 | Rust | Python 3 | part1 complete | day04/README.md |
