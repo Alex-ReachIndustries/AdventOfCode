@@ -1,0 +1,28 @@
+.cache/
+.pytest_cache/
+.venv/
+__pycache__/
+*.pyc
+
+# Rust
+target/
+
+# Go
+bin/
+
+# Java
+*.class
+*.jar
+
+# C/C++
+*.o
+*.obj
+*.exe
+
+# Zig
+zig-cache/
+zig-out/
+
+# Editors
+.idea/
+.vscode/
