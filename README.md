@@ -49,7 +49,7 @@ as not implemented.
 | --- | --- | --- | --- | --- |
 | 01 | Rust | Python 3 | part1 complete | day01/README.md |
 | 02 | Rust | Python 3 | part1 complete | day02/README.md |
-| 03 | TBD | TBD | pending | day03/README.md |
+| 03 | Rust | Python 3 | part1 complete | day03/README.md |
 | 04 | TBD | TBD | pending | day04/README.md |
 | 05 | TBD | TBD | pending | day05/README.md |
 | 06 | TBD | TBD | pending | day06/README.md |
