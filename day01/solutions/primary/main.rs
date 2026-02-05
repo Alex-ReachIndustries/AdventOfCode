@@ -13,9 +13,9 @@ fn read_input(path: Option<&str>) -> io::Result<Vec<u8>> {
     }
 }
 
-fn count_zero_positions(input: &[u8]) -> i32 {
-    let mut pos: i32 = 50;
-    let mut count: i32 = 0;
+fn count_zero_positions(input: &[u8]) -> i64 {
+    let mut pos: i64 = 50;
+    let mut count: i64 = 0;
     let mut i: usize = 0;
 
     while i < input.len() {
@@ -29,9 +29,9 @@ fn count_zero_positions(input: &[u8]) -> i32 {
         let dir = input[i];
         i += 1;
 
-        let mut value: i32 = 0;
+        let mut value: i64 = 0;
         while i < input.len() && input[i].is_ascii_digit() {
-            value = value * 10 + (input[i] - b'0') as i32;
+            value = value * 10 + (input[i] - b'0') as i64;
             i += 1;
         }
 
@@ -49,6 +49,59 @@ fn count_zero_positions(input: &[u8]) -> i32 {
 
         if pos == 0 {
             count += 1;
+        }
+
+        while i < input.len() && input[i] != b'\n' {
+            i += 1;
+        }
+    }
+
+    count
+}
+
+fn count_zero_hits(input: &[u8]) -> i64 {
+    let mut pos: i64 = 50;
+    let mut count: i64 = 0;
+    let mut i: usize = 0;
+
+    while i < input.len() {
+        while i < input.len() && (input[i] == b'\n' || input[i] == b'\r' || input[i] == b' ') {
+            i += 1;
+        }
+        if i >= input.len() {
+            break;
+        }
+
+        let dir = input[i];
+        i += 1;
+
+        let mut value: i64 = 0;
+        while i < input.len() && input[i].is_ascii_digit() {
+            value = value * 10 + (input[i] - b'0') as i64;
+            i += 1;
+        }
+
+        if dir != b'L' && dir != b'R' {
+            while i < input.len() && input[i] != b'\n' {
+                i += 1;
+            }
+            continue;
+        }
+
+        let rem = if dir == b'R' {
+            (100 - pos.rem_euclid(100)).rem_euclid(100)
+        } else {
+            pos.rem_euclid(100)
+        };
+        let first = if rem == 0 { 100 } else { rem };
+        if value >= first {
+            count += 1 + (value - first) / 100;
+        }
+
+        if dir == b'L' {
+            pos = (pos - value).rem_euclid(100);
+        } else {
+            pos = (pos + value).rem_euclid(100);
         }
 
         while i < input.len() && input[i] != b'\n' {
@@ -80,8 +133,8 @@ fn main() {
         }
     }
 
-    if part != 1 {
-        eprintln!("part 2 not implemented yet");
+    if part != 1 && part != 2 {
+        eprintln!("unsupported part: {part}");
         std::process::exit(2);
     }
 
@@ -93,6 +146,10 @@ fn main() {
         }
     };
 
-    let answer = count_zero_positions(&input);
+    let answer = if part == 1 {
+        count_zero_positions(&input)
+    } else {
+        count_zero_hits(&input)
+    };
     println!("{answer}");
 }

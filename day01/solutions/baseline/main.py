@@ -30,18 +30,46 @@ def count_zero_positions(text: str) -> int:
     return count
 
 
+def count_zero_hits(text: str) -> int:
+    pos = 50
+    count = 0
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        direction = line[0]
+        value = int(line[1:])
+        if direction not in {"L", "R"}:
+            continue
+        if direction == "R":
+            rem = (-pos) % 100
+        else:
+            rem = pos % 100
+        first = 100 if rem == 0 else rem
+        if value >= first:
+            count += 1 + (value - first) // 100
+        if direction == "L":
+            pos = (pos - value) % 100
+        else:
+            pos = (pos + value) % 100
+    return count
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--part", type=int, default=1)
     parser.add_argument("--input", dest="input_path")
     args = parser.parse_args()
 
-    if args.part != 1:
-        print("part 2 not implemented yet", file=sys.stderr)
+    if args.part not in {1, 2}:
+        print(f"unsupported part: {args.part}", file=sys.stderr)
         raise SystemExit(2)
 
     text = read_input(args.input_path)
-    answer = count_zero_positions(text)
+    if args.part == 1:
+        answer = count_zero_positions(text)
+    else:
+        answer = count_zero_hits(text)
     print(answer)
 
 
