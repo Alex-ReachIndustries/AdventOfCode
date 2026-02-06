@@ -19,3 +19,4 @@
 
 ## Part 2
 - [x] Day 01 (primary + baseline + benchmarks, part 2)
+- [x] Day 02 (primary + baseline + benchmarks, part 2)

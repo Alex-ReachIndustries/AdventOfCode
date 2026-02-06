@@ -6,8 +6,8 @@ Part 1: invalid IDs are numbers formed by repeating a digit sequence twice.
 For each range [L, R], iterate over possible digit lengths d and compute all
 s values such that n = s * (10^d + 1) lies in [L, R]. Sum via arithmetic series.
 
-Part 2: allow any repetition count k >= 2. For each d and k, compute the
-repetition factor (1 + 10^d + ... + 10^{(k-1)d}) and sum all s in range.
+Part 2: allow any repetition count k >= 2. Count only minimal-period blocks to
+avoid double-counting (e.g., 1111 has minimal period 1, not 2).
 
 Time complexity: O(R * D * K) where D is digit length and K repeat count.
 Space complexity: O(1).
@@ -59,5 +59,5 @@ python3 tools/bench.py \
 
 | Implementation (method) | Language/Runtime | Build flags / mode | Part 1 time (ms) | Part 2 time (ms) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Primary | Rust | rustc -O -C target-cpu=native | TBD | TBD | Math-based range summation |
-| Baseline | Python 3 | cpython | TBD | TBD | Regex parsing + arithmetic series |
+| Primary | Rust | rustc -O -C target-cpu=native | 1.381 (best 1.147) | 1.241 (best 0.890) | Math-based range summation |
+| Baseline | Python 3 | cpython | 19.252 (best 18.570) | 19.412 (best 18.737) | Regex parsing + arithmetic series |
