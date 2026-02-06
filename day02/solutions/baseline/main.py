@@ -21,19 +21,85 @@ def digits(value: int) -> int:
     return count
 
 
-def sum_invalid_range_repeat(
-    left: int, right: int, pow10: list[int], max_digits: int, max_k: int | None
-) -> int:
+def sum_invalid_range(left: int, right: int, pow10: list[int], max_digits: int) -> int:
     total = 0
     max_d = max_digits // 2
     if max_d == 0:
         return 0
     for d in range(1, max_d + 1):
         pow10_d = pow10[d]
+        factor = pow10_d + 1
+        lower_k = pow10[d - 1]
+        min_n = lower_k * factor
+        if min_n > right:
+            break
+        k_min = max(lower_k, (left + factor - 1) // factor if left else 0)
+        k_max = min(pow10_d - 1, right // factor)
+        if k_min <= k_max:
+            count = k_max - k_min + 1
+            sum_k = (k_min + k_max) * count // 2
+            total += factor * sum_k
+    return total
+
+
+def sum_primitive(
+    d: int,
+    left: int,
+    right: int,
+    pow10: list[int],
+    divisors: list[list[int]],
+    memo: dict[tuple[int, int, int], int],
+) -> int:
+    lower = pow10[d - 1]
+    upper = pow10[d] - 1
+    if left < lower:
+        left = lower
+    if right > upper:
+        right = upper
+    if left > right:
+        return 0
+    key = (d, left, right)
+    if key in memo:
+        return memo[key]
+    count = right - left + 1
+    total = (left + right) * count // 2
+    for q in divisors[d]:
+        repeats = d // q
+        rep = 1
+        for _ in range(1, repeats):
+            rep = rep * pow10[q] + 1
+        t_min = (left + rep - 1) // rep
+        t_max = right // rep
+        sub = sum_primitive(q, t_min, t_max, pow10, divisors, memo)
+        total -= rep * sub
+    memo[key] = total
+    return total
+
+
+def sum_invalid_range_part2(left: int, right: int, pow10: list[int], max_digits: int) -> int:
+    total = 0
+    max_d = max_digits // 2
+    if max_d == 0:
+        return 0
+    divisors: list[list[int]] = [[] for _ in range(max_d + 1)]
+    for d in range(2, max_d + 1):
+        q = 1
+        while q * q <= d:
+            if d % q == 0:
+                other = d // q
+                if q < d:
+                    divisors[d].append(q)
+                if other < d and other != q:
+                    divisors[d].append(other)
+            q += 1
+        divisors[d].sort()
+    memo: dict[tuple[int, int, int], int] = {}
+    for d in range(1, max_d + 1):
+        pow10_d = pow10[d]
         lower_k = pow10[d - 1]
         upper_k = pow10_d - 1
         rep = 1
-        k_limit = max_k if max_k is not None else max_digits // d
+        k_limit = max_digits // d
         for _ in range(2, k_limit + 1):
             rep = rep * pow10_d + 1
             min_n = lower_k * rep
@@ -42,14 +108,9 @@ def sum_invalid_range_repeat(
             k_min = max(lower_k, (left + rep - 1) // rep if left else 0)
             k_max = min(upper_k, right // rep)
             if k_min <= k_max:
-                count = k_max - k_min + 1
-                sum_k = (k_min + k_max) * count // 2
-                total += rep * sum_k
+                sum_s = sum_primitive(d, k_min, k_max, pow10, divisors, memo)
+                total += rep * sum_s
     return total
-
-
-def sum_invalid_range(left: int, right: int, pow10: list[int], max_digits: int) -> int:
-    return sum_invalid_range_repeat(left, right, pow10, max_digits, 2)
 
 
 def solve(text: str, part: int) -> int:
@@ -70,7 +131,7 @@ def solve(text: str, part: int) -> int:
         if part == 1:
             total += sum_invalid_range(nums[i], nums[i + 1], pow10, max_digits)
         else:
-            total += sum_invalid_range_repeat(nums[i], nums[i + 1], pow10, max_digits, None)
+            total += sum_invalid_range_part2(nums[i], nums[i + 1], pow10, max_digits)
     return total
 
 

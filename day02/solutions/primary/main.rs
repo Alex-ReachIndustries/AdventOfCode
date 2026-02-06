@@ -52,13 +52,7 @@ fn digits_u128(mut value: u128) -> usize {
     count
 }
 
-fn sum_invalid_range_repeat(
-    left: u128,
-    right: u128,
-    pow10: &[u128],
-    max_digits: usize,
-    max_k: Option<usize>,
-) -> u128 {
+fn sum_invalid_range(left: u128, right: u128, pow10: &[u128], max_digits: usize) -> u128 {
     let mut total: u128 = 0;
     let max_d = max_digits / 2;
     if max_d == 0 {
@@ -67,15 +61,113 @@ fn sum_invalid_range_repeat(
 
     for d in 1..=max_d {
         let pow10_d = pow10[d];
+        let factor = pow10_d + 1;
+        let lower_k = pow10[d - 1];
+        let min_n = match lower_k.checked_mul(factor) {
+            Some(value) => value,
+            None => break,
+        };
+        if min_n > right {
+            break;
+        }
+
+        let k_min = max(lower_k, ceil_div(left, factor));
+        let k_max = min(pow10_d - 1, right / factor);
+        if k_min <= k_max {
+            let count = k_max - k_min + 1;
+            let sum_k = (k_min + k_max) * count / 2;
+            total += factor * sum_k;
+        }
+    }
+
+    total
+}
+
+fn sum_primitive(
+    d: usize,
+    mut left: u128,
+    mut right: u128,
+    pow10: &[u128],
+    divisors: &[Vec<usize>],
+    memo: &mut std::collections::HashMap<(usize, u128, u128), u128>,
+) -> u128 {
+    let lower = pow10[d - 1];
+    let upper = pow10[d] - 1;
+    if left < lower {
+        left = lower;
+    }
+    if right > upper {
+        right = upper;
+    }
+    if left > right {
+        return 0;
+    }
+
+    let key = (d, left, right);
+    if let Some(value) = memo.get(&key) {
+        return *value;
+    }
+
+    let count = right - left + 1;
+    let mut total = (left + right) * count / 2;
+
+    for &q in &divisors[d] {
+        let repeats = d / q;
+        let mut rep: u128 = 1;
+        for _ in 1..repeats {
+            rep = rep * pow10[q] + 1;
+        }
+        let t_min = ceil_div(left, rep);
+        let t_max = right / rep;
+        let sub = sum_primitive(q, t_min, t_max, pow10, divisors, memo);
+        total -= rep * sub;
+    }
+
+    memo.insert(key, total);
+    total
+}
+
+fn sum_invalid_range_repeat(
+    left: u128,
+    right: u128,
+    pow10: &[u128],
+    max_digits: usize,
+) -> u128 {
+    let mut total: u128 = 0;
+    let max_d = max_digits / 2;
+    if max_d == 0 {
+        return 0;
+    }
+
+    let mut divisors: Vec<Vec<usize>> = vec![Vec::new(); max_d + 1];
+    for d in 2..=max_d {
+        let mut q = 1;
+        while q * q <= d {
+            if d % q == 0 {
+                let other = d / q;
+                if q < d {
+                    divisors[d].push(q);
+                }
+                if other < d && other != q {
+                    divisors[d].push(other);
+                }
+            }
+            q += 1;
+        }
+        divisors[d].sort_unstable();
+    }
+
+    let mut memo: std::collections::HashMap<(usize, u128, u128), u128> =
+        std::collections::HashMap::new();
+
+    for d in 1..=max_d {
+        let pow10_d = pow10[d];
         let lower_k = pow10[d - 1];
         let upper_k = pow10_d - 1;
         let mut rep: u128 = 1;
-        let k_limit = max_k.unwrap_or(max_digits / d);
+        let k_limit = max_digits / d;
         for _ in 2..=k_limit {
-            match rep.checked_mul(pow10_d).and_then(|v| v.checked_add(1)) {
-                Some(value) => rep = value,
-                None => break,
-            }
+            rep = rep * pow10_d + 1;
             let min_n = match lower_k.checked_mul(rep) {
                 Some(value) => value,
                 None => break,
@@ -86,19 +178,12 @@ fn sum_invalid_range_repeat(
             let k_min = max(lower_k, ceil_div(left, rep));
             let k_max = min(upper_k, right / rep);
             if k_min <= k_max {
-                let count = k_max - k_min + 1;
-                let sum_k = (k_min + k_max) * count / 2;
-                total += rep * sum_k;
+                let sum_s = sum_primitive(d, k_min, k_max, pow10, &divisors, &mut memo);
+                total += rep * sum_s;
             }
         }
     }
 
-    total
-}
-
-fn sum_invalid_range(left: u128, right: u128, pow10: &[u128], max_digits: usize) -> u128 {
-    let mut total: u128 = 0;
-    total += sum_invalid_range_repeat(left, right, pow10, max_digits, Some(2));
     total
 }
 
@@ -168,7 +253,7 @@ fn main() {
         if part == 1 {
             total += sum_invalid_range(left, right, &pow10, max_digits);
         } else {
-            total += sum_invalid_range_repeat(left, right, &pow10, max_digits, None);
+            total += sum_invalid_range_repeat(left, right, &pow10, max_digits);
         }
         idx += 2;
     }
